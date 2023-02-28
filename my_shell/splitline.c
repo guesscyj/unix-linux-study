@@ -81,7 +81,7 @@ char ** splitline(char *line)
 	{
 		while(is_delim(*cp))	/*skip leading spaces*/
 			cp++;
-		if(*cp =="\0")			/*quit at end -o- string 两个空字符*/
+		if(*cp == '\0')		//quit at end -o- string 两个空字符
 			break;
 
 		/* make sure the array has room(+1 for NULL)*/
@@ -125,10 +125,19 @@ void freelist(char **list)
 		free(*cp++);
 	free(list);
 }
+
 void * emalloc(size_t n)
 {
 	void *rv;
 	if((rv = malloc(n))==NULL)
 		fatal("out of memory","",1);
+	return rv;
+}
+
+void *erealloc(void *p,size_t n)
+{
+	void *rv;
+	if((rv = realloc(p,n))==NULL)
+		fatal("realloc() failed","",1);
 	return rv;
 }
