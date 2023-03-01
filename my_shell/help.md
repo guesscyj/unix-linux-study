@@ -9,7 +9,7 @@
 
 ## smsh1.c - version 1
 
-![shellLogic](./Pic/shellLogic)
+![shellLogic](./Pic/smsh1)
 
 1. next_cmd:从输入流读入下一个命令。调用malloc来分配内存以接受任意长度的命令
 
@@ -22,7 +22,7 @@
 解决问题：1.一行命令执行
 2.Ctrl+d的正常退出
 
-## smsh2.c - version 2   
+## smsh2.c - version 2   if语句
 
 ### shell中if语句
 
@@ -34,7 +34,7 @@ if语句的条件当有一系列的命令时，**最后一个命令的exit被用
 
 ### 增加if后的逻辑
 
-![image-20230228110355817](/root/.config/Typora/typora-user-images/image-20230228110355817.png)
+![image-20230228110355817](./Pic/smsh2)
 
 ### 改动地方
 
@@ -48,5 +48,32 @@ if语句的条件当有一系列的命令时，**最后一个命令的exit被用
 1. 如何处理if中多条指令判断，最后一条为判断条件
 2. 此程序是否支持if嵌套
 
-## smsh3.c
+## smsh3.c -version 3 环境变量
 
+### shell中环境变量
+
+环境变量3要素：变量名，值，是否为全局
+
+可以用链表，树等如何数据结构实现
+
+struct var {
+
+char *str;
+
+int global;
+
+};
+
+static struct var_tab[MAXVARS]
+
+### 接口
+
+VLstore(char* var,char* val):增加/更新
+
+VLookup(char* var):取得var的值
+
+VList输出列表到stdout
+
+
+
+![smsh3](./Pic/smsh3)
