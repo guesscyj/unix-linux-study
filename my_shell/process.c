@@ -29,8 +29,10 @@ int process(char**args)
 		rv = 0;
 	else if(is_control_command(args[0]))
 		rv = do_control_command(args);
-	else if(ok_to_execute())
-		rv = execute(args);
+	else if(ok_to_execute()){
+		if(!builtin_command(args,&rv))				/*检查是否与环境变量相关*/
+			rv = execute(args);
+	}
 	return rv;
 }
 

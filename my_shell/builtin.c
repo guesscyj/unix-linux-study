@@ -21,17 +21,17 @@ int builtin_command(char **args,int *resultp)
 {
 	int rv = 0;
 	
-	if(strcmp(args[0],"set")==0){	
-		VList();
+	if(strcmp(args[0],"set")==0){				/*strcmp(char*,char*):所以此处传入args[0],输入时应该为day=daytime,如有空格将传入args[1]*/
+		VLlist();								/*列出所有环境变量*/
 		* resultp = 0;
-		* rv = 1;
+		 rv = 1;
 	}
-	else if(strchr(args[0],'=')!=NULL){
-		*resultp = assign(args[0]);
+	else if(strchr(args[0],'=')!=NULL){			/*同上,被规范了输出格式,可改为args[1]限制空格*/
+		*resultp = assign(args[0]);				/*注册环境变量*/
 		if(*resultp!= -1)
 			rv = 1;
 	}
-	else if(strcmp(args[0],"export")==0){
+	else if(strcmp(args[0],"export")==0){		/*修改环境变量的状态，设定为全局环境变量*/
 		if(args[1]!=NULL&&okname(args[1]))
 			*resultp = VLexport(args[1]);
 		else
@@ -40,7 +40,7 @@ int builtin_command(char **args,int *resultp)
 	}
 	return rv;
 }
-int assign(char *)
+int assign(char *str)
 /* 
  * purpose: execute name = val AND ensure that name is legal
  * returns: -1 for illegal lval, or result fo VLstore
@@ -60,6 +60,7 @@ int assign(char *)
 int okname(char *str)
 /*
  * purpose: determines if a string is a legal variable name
+ * 限制环境变量名
  * returns: 0 for no, 1 for yes
  */
 {

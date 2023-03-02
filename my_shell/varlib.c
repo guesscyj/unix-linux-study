@@ -23,7 +23,7 @@
  */
 
 #include <stdio.h>
-#include <stdlib.c>
+#include <stdlib.h>
 #include <string.h>
 
 #include "varlib.h"
@@ -33,7 +33,7 @@
 struct var {
 		char *str;			/* name = val strings*/
 		int global;			/* a boolean*/
-}
+};
 
 static struct var tab[MAXVARS];			/*the tables*/
 
