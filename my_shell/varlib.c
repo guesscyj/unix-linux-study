@@ -66,11 +66,12 @@ int VLstore(char *name,char *val)
 char* new_string(char *name,char *val)
 /*
  * returns new string of form name = value or NULL on error
+ * 为环境变量分配空间
  */
 {
 	char *retval;
 	
-	retval = malloc(strlen(name)+strlen(val)+2);
+	retval = malloc(strlen(name)+strlen(val)+2);		
 	if(retval != NULL)
 		sprintf(retval,"%s= %s",name,val);
 	return retval;
@@ -103,7 +104,8 @@ int VLexport(char *name)
 		rv = 0;
 	 }
 	 else if(VLstore(name,"")==1)
-		rv = VLexport(name);
+		rv = VLexport(name);							/*为什么重复调用？*/
+														/*调用VLstore可能出现分配内存错误，为防止出现类似错误，重复调用*/
 	 return rv;
 }
 
