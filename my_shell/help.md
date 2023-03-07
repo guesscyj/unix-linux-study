@@ -114,6 +114,36 @@ okname():环境变量合法检查
 
 
 
-## smsh4.c version 4-个性化设置
+## smsh4.c version 4-个性化设置（环境）
 
-VLenviron2table,VLtable2environ
+### 环境
+
+环境是每个程序都可以存取的一个字符串数组,使用extern char **environ;即可访问
+
+![environmodel](./Pic/environModel)
+
+execlp():execlp()会从PATH 环境变量所指的目录中查找符合参数file的文件名, 找到后便执行该文件, 然后将第二个以后的参数当做该文件的argv[0]、argv[1]……, 最后一个参数必须用空指针(NULL)作结束。 
+
+environ:environ指针指向的数组是唯一的例外，当内核执行系统调用execve时，它将数组和字符串复制到新的程序的数据空间，而不是直接替换S
+
+![environCopy](./Pic/environCopy)
+
+**子进程不能修改父进程环境,但fork和exec时，整个环境都主动复制了，所以通过环境来传递数据比较方便，快捷**
+
+
+
+char* getenv(const char *name):在当前环境变量中查找环境变量name
+
+int setenv(const char *name,const char *value,int overwrite):创建环境变量
+
+int unsetenv(const char *name):删除环境变量
+
+
+
+VLenviron2table,VLtable2environ，将环境变量读入table,将environ转换
+
+## 未解决问题
+
+(1). 变量替换
+
+(2).输入/输出重定向
