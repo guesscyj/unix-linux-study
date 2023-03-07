@@ -116,3 +116,4 @@ okname():环境变量合法检查
 
 ## smsh4.c version 4-个性化设置
 
+VLenviron2table,VLtable2environ

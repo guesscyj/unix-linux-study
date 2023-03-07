@@ -163,7 +163,7 @@ int VLenviron2table(char *env[])
 		if(i == MAXVARS)
 			return 0;
 		newstring = malloc(1+strlen(env[i]));
-		if(newstring = NULL)
+		if(newstring == NULL)
 			return 0;
 		strcpy(newstring,env[i]);
 		tab[i].str = newstring;
