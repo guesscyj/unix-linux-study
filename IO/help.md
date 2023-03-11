@@ -97,13 +97,17 @@ close(fd):使用close(fd)来关闭文件的原始连接,只留下文件描述符
 
 dup小结：#include<unistd.h>
 
-​		newfd = dup(oldfd)
+​		int = dup(oldfd)
 
-​		newfd = dup2(oldfd,newfd)
+​		int= dup2(oldfd,otherfd)
+
+dup执行的是修改指向的操作
 
 oldfd:需要复制的文件描述符
 
-newfd复制oldfd后得到的文件描述符
+ohterfd复制oldfd后得到的文件描述符
+
+int为返回值，是指向后的文件描述符值
 
 ## 10.5 为其他程序重定向I/O: who > userlist
 
@@ -111,4 +115,58 @@ newfd复制oldfd后得到的文件描述符
 2. close:关闭子进程相关的标准文件描述符，子进程此时拥有与父进程相同的文件描述符
 3. creat:创建修改的文件，之前关闭的文件描述符为最小的将执行该文件
 4. exec: **exec相关函数虽然会替换数据，但文件描述符为进程是属性，故无法改变**
+
+![stdRedirect](./Pic/stdoutRedirect)
+
+![stdRedirect](./Pic/stdinRedirect)
+
+
+
+​	实现who >> userlog:  将creat改为open即可。close(1)只是修改当前进程的文件描述符
+
+​	sort < data : close(0)
+
+## 10.6 管道编程
+
+### 管道
+
+pipe:创建管道
+
+#include <unistd.h>
+
+result = pipe(int array[2])
+
+result: -1 for false,0 for success
+
+pipe会为array分配最低的两个文件描述符
+
+array[0]:in
+
+array[1]:out
+
+pipedemo.c
+
+![pipe](./Pic/pipedemo)
+
+管道中的通讯信息需要buf来获取输出到显示屏上write(1,buf,len)
+
+### 共享管道
+
+![sharepipe](./Pic/sharepipe)
+
+
+
+write():对应in,输入文件
+
+read():对应out,读出文件
+
+本例中，子进程只写入文件，父进程写入文件，读出文件
+
+switch中为什么没有break：oops处理调用函数中发生了错误的情况，调用exit结束进程，多读注释
+
+### pipe
+
+parent做输入重定向 <，child做输出重定向 >
+
+![pipe](./Pic/pipe)
 
