@@ -7,8 +7,9 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <netdb.h>
+#include <stdlib.h>
 
-#define oops(msg) {perror(msg);exit(1)}
+#define oops(msg) {perror(msg);exit(1);}
 
 int main(int ac,char *av[])
 {

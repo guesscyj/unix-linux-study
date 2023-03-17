@@ -115,4 +115,128 @@ UNIX系统过滤程序从标准输入读取数据, 向标准输出写数据. 几
 
 2.管道的通信只能在同一台主机上运行
 
-socket：
+
+
+### 工作步骤
+
+1. 向内核申请一个socket
+2. 绑定地址到socket上，地址包括主机，端口
+3. 在socket上，允许接入呼叫并设置队列长度为1
+4. 等待/接收呼叫
+5. 传输数据
+6. 关闭连接
+
+### socket()
+
+socket：创建一个套接字描述符（客户端和服务器端）,打开套接字（还无法读写）
+
+头文件：#include <sys/types.h> #include <sys/socket.h>
+
+函数定义：int socket(int domain,int type,int protocol);
+
+domain:通信域		type：socket类型。SOCK_STREAM类型管道
+
+propotol:协议socket中使用的协议，默认为0，0代表标准协议（内核中网络代码所使用的协议）
+
+返回值：sockid ：成功
+
+作用于服务器端和客户端
+
+**套接字(socket)是一个抽象层，应用程序可以通过它发送或接收数据，可对其像对文件一样打开、读写、关闭等。套接字允许应用程序将I/O插入到网络中，并与网络中的其他应用程序进行通信，类似门票**
+
+---
+
+
+
+### bind()
+
+bind:绑定一个地址到socket（数据的接收和发送操作）
+
+头文件：#include <sys/types.h> #include <sys/socket.h>
+
+函数定义： int bind(int sockfd,const struct sockaddr *addr,socklen_t addrlen);
+
+sockfd: socket的fd,其值为socket（）创建成功的返回值		addr:指向包含地址结构的指针
+
+addrlen：地址长度，其值为**sizeof(struct sockaddr)**
+
+返回值： 0 for success , -1 for failed
+
+作用于服务器端和客户端
+
+**bind将一个地址分配sockfd,addr为自己申明，创建，之后填充其具体的主机地址和端口号，最后填写地址族			类型提交门票后，给位置，准备操作**
+
+---
+
+
+
+### listen()
+
+listen: 监听socket上的连接
+
+头文件： #include <sys/socket.h>
+
+函数定义： int listen(int sockfd,int backlog);
+
+sockfd: socket的fd，接收请求的socket，将要转换状态的套接字 		backlog：队列长度，最大的请求数量限制
+
+返回值：0 for success, -1 for failed
+
+作用于服务器端
+
+**将主动套接字转化为监听套接字（listening socket）	用户变安保，待定**	
+
+**		**
+
+
+
+### accept()
+
+accept:接受socket上的一个连接
+
+头文件：#include <sys/types.h> #include <sys/socket.h>
+
+函数定义：int accept(int listenfd,struct sockaddr *addr,int *addrlen);
+
+listenfd:向服务器的请求到达的描述符，保安		addr:指向呼叫者地址结构的指针
+
+addrlen:指向呼叫者地址结构长度的指针	**sizeof(struct sockaddr)**
+
+返回值： fd for success, -1 for failed （fd为非负连接描述符）
+
+作用于服务器端
+
+**accept函数阻塞当前进程，等待来自客户端的连接请求到达侦听描述符listenfd,然后在addr中填写客户端的套接字地址，并返回一个已连接描述符（connected descriptor),该描述符被用来Unix I/O函数与客户端通信。	**
+
+**监听描述符通常创建一次，存在于服务器的整个生命周期。已连接描述符是客户端和服务器端之间已经建立起来了的连接的一个端点，每次请求时都会创建一次**
+
+![listenfd&connect](./Pic/listenfd&connect)
+
+**		**
+
+### connect
+
+connect:连接到socket,客户端通过调用connect来建立与服务器的连接
+
+头文件：#include <sys/socket.h>
+
+函数定义：int connect(int clientfd,const struct sockaddr *addr,socklen_t addrlen);
+
+clientfd:用于建立连接的socket		addr:指向服务器地址结构的指针
+
+addrlen:结构的长度，sizeof(sockaddr_in)
+
+0 for success, -1 for failed
+
+作用于客户端
+
+**connect函数试图与套接字地址为addr的服务器建立一个因特网连接。connect函数会阻塞，直到连接成功或发生错误。成功：clientfd描述符就准备好读写，并且得到的连接是由套接字对(x:y,addr.sin_addr:addr.sin_port)刻画，x表示客户端的IP地址，y表示临时端口，确定了客户端主机上的客户端进程。**
+
+
+
+
+
+
+
+
+
