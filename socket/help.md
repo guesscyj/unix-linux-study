@@ -115,7 +115,23 @@ UNIX系统过滤程序从标准输入读取数据, 向标准输出写数据. 几
 
 2.管道的通信只能在同一台主机上运行
 
+struct sockaddr_in{
 
+　　sa_family_t 　　sin_family;　　//地址族，常用AF_INET
+
+　　uint16_t    　　sin_port;　　  //16位TCP/UDP端口号
+
+　　struct in_addr　　sin_addr;　　 //32位IP地址
+
+　　cha　　　　　　  sin_zero[8]　 //不使用
+
+}；
+
+struct in_addr{
+
+　　in_addr_t　　　　s_addr;　　  //32位IPV4地址
+
+}
 
 ### 工作步骤
 
@@ -232,11 +248,48 @@ addrlen:结构的长度，sizeof(sockaddr_in)
 
 **connect函数试图与套接字地址为addr的服务器建立一个因特网连接。connect函数会阻塞，直到连接成功或发生错误。成功：clientfd描述符就准备好读写，并且得到的连接是由套接字对(x:y,addr.sin_addr:addr.sin_port)刻画，x表示客户端的IP地址，y表示临时端口，确定了客户端主机上的客户端进程。**
 
+## 服务器：远程ls
 
+![ls](./Pic/ls)
 
+rls实现的3要素：
 
+- 协议
+- 客户端程序
+- 服务器端程序
 
+协议包含请求和应答。首先，客户端发送一行包含目录名称的请求。服务器读取该目录名后打开并读取该目录。返回文件列表。客户端循环读取文件列表，直到服务器挂断连接产生文件结尾标准。
 
+rls只要难道在理解代码。**保证服务器端不被破坏，sanitize只读取文件的格式/、数字，英文，不读；防止有其他命令执行**
 
+## 小结
 
+socket编程，socket,socket套接字
 
+客户端/服务器端模式
+
+客户端请求限制，服务器保护
+
+struct sockaddr_in{
+
+　　sa_family_t 　　sin_family;　　//地址族，常用AF_INET
+
+　　uint16_t    　　sin_port;　　  //16位TCP/UDP端口号
+
+　　struct in_addr　　sin_addr;　　 //32位IP地址
+
+　　cha　　　　　　  sin_zero[8]　 //不使用
+
+}；
+
+struct in_addr{
+
+　　in_addr_t　　　　s_addr;　　  //32位IPV4地址
+
+}
+
+sin_port:自定义 例如：13000、15000
+
+sin_family:通常AF_INET
+
+sin_addr:自定义,常用 struct hostent 中的h_addr 来赋值Ip地址

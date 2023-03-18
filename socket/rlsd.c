@@ -68,12 +68,13 @@ int main(int ac,char *av[])
 		if((sock_fpo = fdopen(sock_fd,"w"))==NULL)
 			oops("fdopen writing");
 
-		sprintf(command,"ls %s",dirname);
-		if((pipe_fp = popen(command,"r"))==NULL)
+		sprintf(command,"ls %s",dirname);				//组合指令，在服务器上运行指令，可用my_ls来代替
+		if((pipe_fp = popen(command,"r"))==NULL)		//popen执行指令
 			oops("popen");
 
 		while((c=getc(pipe_fp))!=EOF)
-			putc(c,sock_fpo);
+			putc(c,sock_fpo);							//输出给客户端
+		
 		pclose(pipe_fp);
 		fclose(sock_fpo);
 		fclose(sock_fpi);
@@ -86,6 +87,7 @@ void sanitize(char *str)
  *
  * so..we remove everything but slashes and alphanumerics
  * There are nicer solutions, see exercises
+ * 处理文件路径
  */
 {
 	char *src,*dest;

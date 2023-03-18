@@ -40,7 +40,7 @@ int main(int ac,char *av[])
 		oops("connect");
 
 	/*Step 3:send directory name,then read back results*/
-	if(write(sock_id,av[2],strlen(av[2]))==-1)
+	if(write(sock_id,av[2],strlen(av[2]))==-1)						//只告诉服务器要查看的文件夹路径
 		oops("write");
 	if(write(sock_id,"\n",1)==-1)
 		oops("write");
