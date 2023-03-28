@@ -46,5 +46,57 @@
 
 数据报socket使用的叫UDP(用户数据报协议：User Datagram Protocol)
 
+![tcp&udp](./Pic/TCPUDP)
 
+数据报的只要部分：目的地址，返回地址，消息
+
+UDP访问模式：socket(PF_INET,SOCK_DGRAM,0)与tcp创建的时候参数不同，且程序中使用sendto和recvfrom，而不调用listen
+
+
+
+
+
+dgrecv.c:接受数据报（服务器端）
+
+dgsend.c:发送数据报（客户端）
+
+dgram.c:辅助函数（创建socket细节，封装细节）
+
+调用: 
+
+服务器端：./ dgrecv 4444 &
+
+客户端: ./dgsend 127.0.0.1 4444 "test info"
+
+./dgsend ipaddr postnumber 消息
+
+### sendto()
+
+目标:从socket发送消息
+
+头文件：#include <sys/types.h> #include <sys/socket.h>
+
+函数定义： nchars = sendto(int socket,const void *msg,size_t len,int flags,const struct sockaddr *dest,socklen_t dest_len)
+
+​	socket: socket id				msg:发送的字符类型的数组				len:发送的字符数
+
+​	flags: 比特的集合，设置发送属性，0表示普通		dest: 指向远端socket地址的指针		dest_len:地址长度
+
+return: -1 出错 ；nchars:发送的字符数
+
+### recvfrom()
+
+目标：从socket接受消息
+
+头文件：#include <sys/types.h>	#include <sys/socket.h>
+
+函数定义: nchars = recvfrom(int socket,const void *msg,size_t len ,int flags,const strcut sockaddr * sender,socklen_t *sender_len)
+
+socket:socket id			msg:字符类型的数组		len:接收的字符数
+
+flags: 表示接收属性的比特的集合，0表示普通	sender：指向远端socket的地址和指针	sender_len:地址长度
+
+return：-1 出错；nchars：发送的字符数
+
+### 数据报应答
 
