@@ -100,3 +100,47 @@ return：-1 出错；nchars：发送的字符数
 
 ### 数据报应答
 
+编译和测试: gcc dgrecv.c dgram.c -o dgrecv
+
+​					gcc dgsend.c dgram.c -o desend
+
+数据报从一个socket发送到另一个socket。发送者使用sendto来指定消息、长度和目的地。接收者使用recvfrom接收消息。
+
+## 许可证服务器
+
+![HELO](./Pic/helo)
+
+带用户队列的许可证服务器
+
+do_transaction():负责与建立了连接的socket进行交易
+
+客户：HELO:代表申请票据		GBYE：代表退还票据
+
+服务器:对用户的不同请求进行处理，严格规范了交互请求消息的格式
+
+
+
+对服务器进行解析:
+
+TICKET_AVAIL：分配给用户的票据是否可用 flag
+
+MAXUSER:限制申请票据用户
+
+say_hello():申请票据，即相关输出，严格要求格式,如果pid == 0,表示可用票据
+
+say_goodbye():收回票据，严格要求格式
+
+
+
+handle_request():由4个字符的命令带一个参数组成，服务器检查命令，调用相关函数，即使命令不合法，调用相应应答，客户会阻塞，直到收到应答
+
+
+
+编译命令:
+
+gcc lserv1.c lserv_funcs1.c dgram.c -o lserv1
+
+gcc lclnt1.c lclnt_funcs1.c dgram.c -o lclnt1
+
+
+

@@ -5,6 +5,14 @@
  */
 
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+void setup();
+void shut_down();
+void release_ticket();
+void do_regular_work();
+int get_ticket();
 
 int main(int ac,char *av[])
 {
