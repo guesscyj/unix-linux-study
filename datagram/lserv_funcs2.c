@@ -13,6 +13,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <arpa/inet.h>
+#include <unistd.h>
 
 #define SERVER_PORTNUM 2020			/* Our server's port number */
 #define MSGLEN 128					/* Size of our datagrams*/
@@ -30,7 +31,7 @@ int sd = -1;					/*Our socket*/
 int num_tickets_out = 0;		/*Number of tickets outstanding*/
 char *do_hello();
 char *do_goodbye();
-char *do_validate();
+static char *do_validate();
 void narrate(char *msg1,char *msg2,struct sockaddr_in * clientp);
 /*
  * setup() - initialize license server

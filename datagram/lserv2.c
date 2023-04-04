@@ -10,6 +10,8 @@
 #include <signal.h>
 #include <sys/errno.h>
 #define MSGLEN 128		/*size of our datagram*/
+#define RECLAIM_INTERVAL 60
+
 int setup();
 void handle_request(char *req,struct sockaddr_in *client,socklen_t addlen);
 void narrate(char *msg1,char *msg2,struct sockaddr_in * clientp);
