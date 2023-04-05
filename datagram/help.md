@@ -267,3 +267,10 @@ gcc logfiled.c -o logfiled
 gcc logfilec.c -o logfilec
 
 ./logfilec 'Nice system.Swell software'
+
+
+
+## 小结
+
+![main](./Pic/main)
+
