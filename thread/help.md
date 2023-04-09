@@ -123,3 +123,67 @@ pthread_join将会使线程挂起直到thread制定的线程终止。如果retva
 正常情况下，互斥量会支持运行，但如果一个线程试图解锁一个没被锁住的互斥量，会发生死锁，互斥量具有诸多问题，不同线程系统有不同的出理方案。
 
 ## 14.4线程与进程
+
+线程与进程比较:
+
+### 1.共享数据空间
+
+​	fork出的进程将复制原有进程的一份数据空间，不同进程对数据空间进行操作，互不影响。
+
+​	thread出的线程，共享着同一个数据空间。故在编程时需考虑malloc、free等问题。往往是不释放空间，导致了空间的囤积。返回静态局部变量的指针的函数无法兼容多线程环境。
+
+### 2.文件描述符
+
+​	fork出的进程，将复制文件描述符，子进程继承了父进程的文件描述符，当子进程的文件描述符关闭时，父进程的仍然打开，互不影响。
+
+​	thread出的线程，会将同一个文件描述符**传递**给多个线程，关闭了一个文件描述符，相当于将所有的线程的文件描述符关闭，共享着文件描述符。
+
+### 3.进程ID
+
+​	fork出的进程，拥有着不同的进程ID。
+
+​	thread出的线程，都共享着同一个进程ID，故当某一个线程执行有关进程的操作时，会影响到所有的线程，如exec、fork、exit等。exec会调用新的程序取代当前进程，当前进程中的所有线程都将被取代。线程fork，其他的线程不会复制给新的进程。
+
+### 信号处理
+
+​	不同的系统线程处理系统不同，此处说一下linux内核处理方式
+
+对于进程下的多个线程来说， 信号处理函数是共享的。
+
+在Linux内核实现中， 同一个线程组里的所有线程都共享一个struct sighand结构体。 该结构体中存在一个action数组， 数组共64项， 每一个成员都是k_sigaction结构体类型， 一个k_sigaction结构体对应一个信号的信号处理函数。
+
+## 14.5 线程间互通消息
+
+线程间没有使用signal机制，而是一个类似于signal的机制。
+
+使用加锁的变量机制来传递数据。线程挂起。线程共享数据。
+
+![thread_singal](./Pic/thread_singal)
+
+### pthread_cond_wait
+
+目标： 使线程挂起，等待某条件变量的信号
+
+头文件： #include <pthread.h>
+
+函数原型： int pthread_cond_wait(pthread_cond_t *cond,pthread_mutex_t *mutex)；
+
+参数： cond 指向某条件变量的指针		mutex 指向互斥锁对象的指针
+
+返回值：	0 for success,errcode for failed
+
+pthread_cond_wait是线程挂起，直到另一个线程通过条件变量发出消息。pthread_cond_wait函数总是和互斥锁一起使用。先自动释放指定的锁，然后等待条件变量的变化。
+
+### pthread_cond_signal
+
+目标： 唤醒一个正在等待的线程
+
+头文件： #include <pthread.h>
+
+函数原型： int pthread_cond_signal(pthread_cond_t *cond)；
+
+参数: 	cond 指向某条件变量的指针
+
+返回值： 	0 for success,errcode for failed
+
+pthread_cond_signal 会通过条件变量cond发消息。若没有线程等待消息，则不会发生什么，若有多个线程等待，唤醒其中一个。
