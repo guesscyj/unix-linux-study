@@ -80,6 +80,6 @@ void *count_words(void *a)
 	pthread_cond_signal(&flag);				/*raise the flag*/
 	printf("COUNT: unlocking box\n");
 	pthread_mutex_unlock(&lock);			/*unlock the mailbox*/
-	return NULL;
+	return NULL;
 
 }
